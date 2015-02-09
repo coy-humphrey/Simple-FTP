@@ -3,6 +3,11 @@ import java.io.*;
 
 public class ClientHandler implements Runnable
 {
+    class GetHandler implements Runnable
+    {
+        
+    }
+    
     Socket client;
 	public ClientHandler (Socket c)
 	{
@@ -35,7 +40,8 @@ public class ClientHandler implements Runnable
         String[] words = line.split (" ");
         switch (words[0])
         {
-            case "exit": client.close();
+            case "exit": client.close(); break;
+            case "port": 
         }
     }
 }
