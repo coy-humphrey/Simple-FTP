@@ -36,8 +36,10 @@ handler h host port = do
                       then do 
                           forkIO $ doGet host port (cmd !! 1)
                           handler h host ""
-                      else hClose h
-        "dir"  -> doDir host port
+                      else do hClose h
+        "dir"  -> do 
+                      doDir host port
+                      handler h host ""
         _      -> hClose h
 
 doGet :: HostName -> String -> String -> IO ()
