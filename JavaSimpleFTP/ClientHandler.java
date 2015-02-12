@@ -19,38 +19,23 @@ public class ClientHandler implements Runnable
         public void run(){
         	
         	int d;
-        	PrintWriter out = null;
-        	FileInputStream in = null;
-        	try {
-        		Socket sock = new Socket(addr, portNum);
-            	out = new PrintWriter(sock.getOutputStream(), true);
-            	in  = new FileInputStream(file);
-            	while ((d = in.read()) != -1){
+        	try (
+                Socket sock = new Socket(addr, portNum);
+                PrintWriter out =
+                    new PrintWriter(sock.getOutputStream(), true);
+                FileInputStream in =
+                    new FileInputStream(file);
+                ) 
+            {
+            	while ((d = in.read()) != -1)
+                {
             		out.write(d);
             	}
-        	} 
-        	catch (Exception e){ 
-        		System.out.println("This is mean");
         	}
-        		finally {
-        	
-        		if (in != null){
-        			try{
-        				in.close();
-        			}
-        			catch (Exception e){
-        				System.out.println("WHY!?");
-        			}
-        		}
-        		if (out != null){
-        			try{
-        				out.close();
-        			}
-        			catch (Exception e){
-        				System.out.println("WHY!?");
-        			}
-        		}
-        	}
+            catch (Exception e)
+            {
+                System.out.println ("Failed to connect to client");
+            }
             port = 0;
         }
     }
