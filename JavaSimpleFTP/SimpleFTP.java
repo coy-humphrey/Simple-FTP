@@ -9,7 +9,7 @@ public class SimpleFTP
     {
         if (args.length != 1)
         {
-        	System.err.println("Usage: java EchoServer <port>");
+        	System.err.println("Usage: java SimpleFTP <port>");
         	System.exit(1);
         }
 
@@ -27,7 +27,7 @@ public class SimpleFTP
         }
         catch (IOException e)
         {
-        	System.out.println ("couldn't listen on port");
+        	System.err.println ("Failed to bind to listen port");
         }
     }
 
@@ -40,7 +40,7 @@ public class SimpleFTP
         }
         catch (IOException e)
         {
-        	System.out.println ("problem connecting to client");
+        	System.err.println ("Failed to connect to client");
         }
         (new Thread(new ClientHandler(clientSocket))).start();
     }

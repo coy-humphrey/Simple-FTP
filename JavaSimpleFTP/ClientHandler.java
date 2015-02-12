@@ -34,7 +34,7 @@ public class ClientHandler implements Runnable
         	}
             catch (Exception e)
             {
-                System.out.println ("Failed to connect to client");
+                System.err.println ("Failed to connect to client");
             }
             port = 0;
         }
@@ -64,7 +64,7 @@ public class ClientHandler implements Runnable
         }
         catch (IOException e)
         {
-        	System.out.println ("Failed to thread");
+        	System.err.println ("Failed to thread");
         }
 	}
 
