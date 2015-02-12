@@ -26,21 +26,35 @@ loop sock = do
 handler :: Handle -> HostName -> String -> IO ()
 handler h host port = do
     line <- hGetLine h :: IO String
-    let cmd = words line
+    let cmd = if (length.words) line > 0
+        then words line
+        else [""]
     case (head cmd) of 
-        "exit" -> hClose h
-        "port" -> if (length cmd == 2) 
-                      then handler h host (cmd !! 1)
-                      else hClose h
-        "get"  -> if length cmd == 2 && port /= []
-                      then do 
-                          forkIO $ doGet host port (cmd !! 1)
-                          handler h host ""
-                      else do hClose h
-        "dir"  -> do 
-                      doDir host port
-                      handler h host ""
-        _      -> hClose h
+        "exit"   -> hClose h
+        "port"   -> if (length cmd == 2) 
+                        then
+                            handler h host (cmd !! 1)
+                        else do
+                            hPutStrLn h "Invalid arguments to port"
+                            handler h host port
+        "get"    -> if length cmd == 2 && port /= []
+                        then do 
+                            forkIO $ doGet host port (cmd !! 1)
+                            handler h host ""
+                        else do
+                            hPutStrLn h "get command failed"
+                            handler h host port
+        "dir"    -> if length cmd == 1 && port /= []
+                        then do
+                            doDir host port
+                            handler h host ""
+                        else do
+                            hPutStrLn h "dir command failed"
+                            handler h host port
+        ""       -> handler h host port
+        _        -> do
+                        hPutStrLn h "Unrecognized command"
+                        handler h host port
 
 doGet :: HostName -> String -> String -> IO ()
 doGet host port file = do
