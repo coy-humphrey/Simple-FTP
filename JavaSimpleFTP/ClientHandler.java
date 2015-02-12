@@ -23,9 +23,8 @@ public class ClientHandler implements Runnable
         	FileInputStream in = null;
         	try {
         		Socket sock = new Socket(addr, portNum);
-            	out = 
-            			new PrintWriter(sock.getOutputStream(), true);
-            	in = new FileInputStream(file);
+            	out = new PrintWriter(sock.getOutputStream(), true);
+            	in  = new FileInputStream(file);
             	while ((d = in.read()) != -1){
             		out.write(d);
             	}
@@ -52,6 +51,7 @@ public class ClientHandler implements Runnable
         			}
         		}
         	}
+            port = 0;
         }
     }
     

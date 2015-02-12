@@ -4,6 +4,8 @@ import System.IO
 import System.Environment (getArgs)
 import Control.Monad (unless)
 import qualified Data.ByteString.Lazy as B 
+import System.Directory
+import Data.List (sort)
 
 -- See: http://www.catonmat.net/blog/simple-haskell-tcp-server/
 
@@ -35,6 +37,7 @@ handler h host port = do
                           forkIO $ doGet host port (cmd !! 1)
                           handler h host ""
                       else hClose h
+        "dir"  -> doDir host port
         _      -> hClose h
 
 doGet :: HostName -> String -> String -> IO ()
@@ -44,4 +47,12 @@ doGet host port file = do
     withFile file ReadMode (\handle -> do
         contents <- B.hGetContents handle
         B.hPut sock contents)
+    hClose sock
+
+doDir ::HostName -> String -> IO ()
+doDir host port = do
+    let portNum = fromIntegral (read port :: Int)
+    sock <- connectTo host (PortNumber portNum)
+    content <- (getCurrentDirectory >>= getDirectoryContents)
+    mapM_ (hPutStrLn sock) (sort content)
     hClose sock
