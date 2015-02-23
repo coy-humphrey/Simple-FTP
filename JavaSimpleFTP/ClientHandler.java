@@ -161,9 +161,17 @@ public class ClientHandler implements Runnable
             			 }
             			 break;
             case "get":
+            	if (words.length != 2){
+            		out.write("get invalid command");
+            		break;
+            	}
             	(new Thread(new GetHandler(client.getInetAddress(), port, words[1]))).start();
             	break;
             case "put":
+            	if (words.length != 2){
+            		out.write("put invalid command");
+            		break;
+            	}
             	(new Thread(new PutHandler(out, words[1]))).start();
             	break;
             case "port":
@@ -173,6 +181,10 @@ public class ClientHandler implements Runnable
             	(new Thread(new ListHandler(client.getInetAddress(), port))).start();
             	break;
             case "cd":
+            	if (words.length != 2){
+            		out.write("cd invalid command");
+            		break;
+            	}
             	changeDirectory(words[1]);
             	break;
         }
