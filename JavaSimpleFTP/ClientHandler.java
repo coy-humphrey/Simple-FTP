@@ -40,6 +40,43 @@ public class ClientHandler implements Runnable
         }
     }
     
+    class ListHandler implements Runnable{
+    	InetAddress addr;
+        int portNum;
+        String file;
+        
+        public ListHandler(InetAddress addr, int portNum){
+        	this.addr = addr;
+        	this.portNum = portNum;
+        }
+        
+        public void run(){
+        	
+        	int d;
+        	try (
+                Socket sock = new Socket(addr, portNum);
+                PrintWriter out =
+                    new PrintWriter(sock.getOutputStream(), true);
+                FileInputStream in =
+                    new FileInputStream(file);
+        		
+                ) 
+            {
+        		File dir = new File(".");
+        		File[] dirs = dir.listFiles();
+        		
+        		for (File f : dirs){
+        			System.out.println(f.getName());
+        		}
+        	}
+            catch (Exception e)
+            {
+                System.err.println ("Failed to connect to client");
+            }
+            port = 0;
+        }
+    }
+    
     Socket client;
     int port;
 	public ClientHandler (Socket c)
@@ -84,10 +121,13 @@ public class ClientHandler implements Runnable
             case "port":
             	handlePort(words);
             	break;
+            case "dir":
+            	(new Thread(new ListHandler(client.getInetAddress(), port))).start();
+            	break;
         }
     }    
     
-    public void handlePort (String[] args){
-    	port = Integer.parseInt(args[1]);
+    public void handlePort (String[] atgs){
+    	port = Integer.parseInt(atgs[1]);
     }
 }
