@@ -46,7 +46,7 @@ handler h host port = do
                             handler h host port
         "dir"    -> if length cmd == 1 && port /= []
                         then do
-                            doDir host port
+                            doDir h
                             handler h host ""
                         else do
                             hPutStrLn h "dir command failed"
@@ -72,10 +72,7 @@ doGet host port file = do
         B.hPut sock contents)
     hClose sock
 
-doDir ::HostName -> String -> IO ()
-doDir host port = do
-    let portNum = fromIntegral (read port :: Int)
-    sock <- connectTo host (PortNumber portNum)
+doDir :: Handle -> IO ()
+doDir h = do
     content <- (getCurrentDirectory >>= getDirectoryContents)
-    mapM_ (hPutStrLn sock) (sort content)
-    hClose sock
+    mapM_ (hPutStrLn h) (sort content)
