@@ -3,7 +3,9 @@ import java.io.*;
 
 public class ClientHandler implements Runnable
 {
-	
+	//*********************************************************//
+    //********************GET HANDLER**************************//
+    //*********************************************************//
     class GetHandler implements Runnable
     {
         InetAddress addr;
@@ -40,6 +42,9 @@ public class ClientHandler implements Runnable
         }
     }
     
+    //*********************************************************//
+    //*******************LIST HANDLER**************************//
+    //*********************************************************//
     class ListHandler implements Runnable{
     	InetAddress addr;
         int portNum;
@@ -74,6 +79,49 @@ public class ClientHandler implements Runnable
         }
     }
     
+    //*********************************************************//
+    //********************PUT HANDLER**************************//
+    //*********************************************************//
+    class PutHandler implements Runnable
+    {
+        PrintWriter out;
+        String file;
+        
+        public PutHandler(PrintWriter o, String file){
+        	this.file = file;
+        	this.out = o;
+        }
+        
+        public void run(){
+        	
+        	int d;
+        	try (
+                ServerSocket sock = new ServerSocket(0);
+        		
+        		
+                ) 
+            {
+            	out.write("" + sock.getLocalPort());
+            	try (
+            			Socket client = sock.accept();
+                		InputStreamReader in = new InputStreamReader(client.getInputStream());
+            			FileOutputStream fileout = new FileOutputStream(file);
+            		) {
+            		while ((d = in.read()) != -1){
+            			fileout.write(d);
+            		}
+            	}
+            	
+            	 
+        	}
+            catch (Exception e)
+            {
+                System.err.println ("Failed to connect to client");
+            }
+            port = 0;
+        }
+    }
+    
     Socket client;
     int port;
 	public ClientHandler (Socket c)
@@ -93,7 +141,7 @@ public class ClientHandler implements Runnable
     		String line;
             while ((line = in.readLine()) != null)
             {
-            	handleLine (line);
+            	handleLine (out, line);
             }
         }
         catch (IOException e)
@@ -102,7 +150,7 @@ public class ClientHandler implements Runnable
         }
 	}
 
-    public void handleLine (String line)
+    public void handleLine (PrintWriter out, String line)
     {
         String[] words = line.split (" ");
         switch (words[0])
@@ -114,6 +162,9 @@ public class ClientHandler implements Runnable
             			 break;
             case "get":
             	(new Thread(new GetHandler(client.getInetAddress(), port, words[1]))).start();
+            	break;
+            case "put":
+            	(new Thread(new PutHandler(out, words[1]))).start();
             	break;
             case "port":
             	handlePort(words);
