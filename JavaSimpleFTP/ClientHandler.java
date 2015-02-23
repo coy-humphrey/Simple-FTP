@@ -43,43 +43,6 @@ public class ClientHandler implements Runnable
     }
     
     //*********************************************************//
-    //*******************LIST HANDLER**************************//
-    //*********************************************************//
-    class ListHandler implements Runnable{
-    	InetAddress addr;
-        int portNum;
-        
-        public ListHandler(InetAddress addr, int portNum){
-        	this.addr = addr;
-        	this.portNum = portNum;
-        }
-        
-        public void run(){
-        	
-        	int d;
-        	try (
-                Socket sock = new Socket(addr, portNum);
-                PrintWriter out =
-                    new PrintWriter(sock.getOutputStream(), true);
-        		
-                ) 
-            {
-        		File dir = new File(".");
-        		File[] dirs = dir.listFiles();
-        		
-        		for (File f : dirs){
-        			out.println(f.getName());
-        		}
-        	}
-            catch (Exception e)
-            {
-                System.err.println ("Failed to connect to client");
-            }
-            port = 0;
-        }
-    }
-    
-    //*********************************************************//
     //********************PUT HANDLER**************************//
     //*********************************************************//
     class PutHandler implements Runnable
@@ -178,14 +141,15 @@ public class ClientHandler implements Runnable
             	handlePort(words);
             	break;
             case "dir":
-            	(new Thread(new ListHandler(client.getInetAddress(), port))).start();
+            	listDir(out);
             	break;
             case "cd":
             	if (words.length != 2){
             		out.println("cd invalid command");
             		break;
             	}
-            	changeDirectory(words[1]);
+//            	changeDirectory(words[1]);
+            	out.println("Doesn't actually do anything now...");
             	break;
         }
     }    
@@ -194,15 +158,28 @@ public class ClientHandler implements Runnable
     	port = Integer.parseInt(atgs[1]);
     }
     
-    public boolean changeDirectory(String fn){
-    	boolean result = false;
-    	File directory;
-    	
-    	directory = new File(fn).getAbsoluteFile();
-    	if (directory.exists() || directory.mkdirs()){
-    		result = (System.setProperty("user.dir", directory.getAbsolutePath()) != null);
+    public void listDir (PrintWriter out){
+    	try {
+    	File dir = new File(".");
+		File[] dirs = dir.listFiles();
+		
+		for (File f : dirs){
+			out.println(f.getName());
+		}
+    	} catch (Exception e){
+    		System.err.println("Failed to list");
     	}
-    	
-    	return result;
     }
+    
+//    public boolean changeDirectory(String fn){
+//    	boolean result = false;
+//    	File directory;
+//    	
+//    	directory = new File(fn).getAbsoluteFile();
+//    	if (directory.exists() || directory.mkdirs()){
+//    		result = (System.setProperty("user.dir", directory.getAbsolutePath()) != null);
+//    	}
+//    	
+//    	return result;
+//    }
 }
