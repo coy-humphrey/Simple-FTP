@@ -67,7 +67,7 @@ public class ClientHandler implements Runnable
             	out.println("" + sock.getLocalPort());
             	try (
             			Socket client = sock.accept();
-                		InputStreamReader in = new InputStreamReader(client.getInputStream());
+                		InputStream in = client.getInputStream();
             			FileOutputStream fileout = new FileOutputStream(file);
             		) {
             		while ((d = in.read()) != -1){
