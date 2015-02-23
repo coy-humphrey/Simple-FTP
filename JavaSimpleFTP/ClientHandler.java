@@ -121,10 +121,25 @@ public class ClientHandler implements Runnable
             case "dir":
             	(new Thread(new ListHandler(client.getInetAddress(), port))).start();
             	break;
+            case "cd":
+            	changeDirectory(words[1]);
+            	break;
         }
     }    
     
     public void handlePort (String[] atgs){
     	port = Integer.parseInt(atgs[1]);
+    }
+    
+    public boolean changeDirectory(String fn){
+    	boolean result = false;
+    	File directory;
+    	
+    	directory = new File(fn).getAbsoluteFile();
+    	if (directory.exists() || directory.mkdirs()){
+    		result = (System.setProperty("user.dir", directory.getAbsolutePath()) != null);
+    	}
+    	
+    	return result;
     }
 }
