@@ -63,7 +63,7 @@ public class ClientHandler implements Runnable
         		File[] dirs = dir.listFiles();
         		
         		for (File f : dirs){
-        			System.out.println(f.getName());
+        			out.write(f.getName() + "\n");
         		}
         	}
             catch (Exception e)
