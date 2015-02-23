@@ -43,7 +43,6 @@ public class ClientHandler implements Runnable
     class ListHandler implements Runnable{
     	InetAddress addr;
         int portNum;
-        String file;
         
         public ListHandler(InetAddress addr, int portNum){
         	this.addr = addr;
@@ -57,8 +56,6 @@ public class ClientHandler implements Runnable
                 Socket sock = new Socket(addr, portNum);
                 PrintWriter out =
                     new PrintWriter(sock.getOutputStream(), true);
-                FileInputStream in =
-                    new FileInputStream(file);
         		
                 ) 
             {
