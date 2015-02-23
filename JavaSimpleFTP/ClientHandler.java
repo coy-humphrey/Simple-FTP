@@ -68,7 +68,7 @@ public class ClientHandler implements Runnable
         		File[] dirs = dir.listFiles();
         		
         		for (File f : dirs){
-        			out.write(f.getName() + "\n");
+        			out.write(f.getName());
         		}
         	}
             catch (Exception e)
@@ -101,7 +101,7 @@ public class ClientHandler implements Runnable
         		
                 ) 
             {
-            	out.write("" + sock.getLocalPort());
+            	out.println("" + sock.getLocalPort());
             	try (
             			Socket client = sock.accept();
                 		InputStreamReader in = new InputStreamReader(client.getInputStream());
@@ -162,14 +162,14 @@ public class ClientHandler implements Runnable
             			 break;
             case "get":
             	if (words.length != 2){
-            		out.write("get invalid command");
+            		out.println("get invalid command");
             		break;
             	}
             	(new Thread(new GetHandler(client.getInetAddress(), port, words[1]))).start();
             	break;
             case "put":
             	if (words.length != 2){
-            		out.write("put invalid command");
+            		out.println("put invalid command");
             		break;
             	}
             	(new Thread(new PutHandler(out, words[1]))).start();
@@ -182,7 +182,7 @@ public class ClientHandler implements Runnable
             	break;
             case "cd":
             	if (words.length != 2){
-            		out.write("cd invalid command");
+            		out.println("cd invalid command");
             		break;
             	}
             	changeDirectory(words[1]);
