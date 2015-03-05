@@ -44,10 +44,17 @@ handler h host port = do
                         else do
                             hPutStrLn h "get command failed"
                             handler h host port
-        "dir"    -> if length cmd == 1 && port /= []
+        "put"    -> if length cmd == 2
+                        then do 
+                            forkIO $ doPut h (cmd !! 1)
+                            handler h host port
+                        else do
+                            hPutStrLn h "put command failed"
+                            handler h host port
+        "dir"    -> if length cmd == 1
                         then do
                             doDir h
-                            handler h host ""
+                            handler h host port
                         else do
                             hPutStrLn h "dir command failed"
                             handler h host port
@@ -71,6 +78,18 @@ doGet host port file = do
         contents <- B.hGetContents handle
         B.hPut sock contents)
     hClose sock
+
+doPut :: Handle -> String -> IO ()
+doPut h file = do
+    sock <- listenOn $ PortNumber 0
+    (PortNumber port) <- socketPort sock
+    print port
+    hPutStrLn h $ show port
+    (c,_,_) <- accept sock
+    withFile file WriteMode (\handle -> do
+        contents <- B.hGetContents c
+        B.hPut handle contents)
+    sClose sock
 
 doDir :: Handle -> IO ()
 doDir h = do
