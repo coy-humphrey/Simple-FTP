@@ -60,8 +60,6 @@ public class ClientHandler implements Runnable
         	int d;
         	try (
                 ServerSocket sock = new ServerSocket(0);
-        		
-        		
                 ) 
             {
             	out.println("" + sock.getLocalPort());
@@ -73,9 +71,7 @@ public class ClientHandler implements Runnable
             		while ((d = in.read()) != -1){
             			fileout.write(d);
             		}
-            	}
-            	
-            	 
+            	}	 
         	}
             catch (Exception e)
             {
@@ -170,16 +166,4 @@ public class ClientHandler implements Runnable
     		System.err.println("Failed to list");
     	}
     }
-    
-//    public boolean changeDirectory(String fn){
-//    	boolean result = false;
-//    	File directory;
-//    	
-//    	directory = new File(fn).getAbsoluteFile();
-//    	if (directory.exists() || directory.mkdirs()){
-//    		result = (System.setProperty("user.dir", directory.getAbsolutePath()) != null);
-//    	}
-//    	
-//    	return result;
-//    }
 }

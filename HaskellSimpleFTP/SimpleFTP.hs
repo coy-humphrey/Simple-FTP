@@ -58,13 +58,6 @@ handler h host port = do
                         else do
                             hPutStrLn h "dir command failed"
                             handler h host port
-        "cd"     -> if length cmd == 2
-                        then do
-                            setCurrentDirectory (cmd !! 1)
-                            handler h host port
-                        else do
-                            hPutStrLn h "cd command failed"
-                            handler h host port
         ""       -> handler h host port
         _        -> do
                         hPutStrLn h "Unrecognized command"
@@ -83,12 +76,12 @@ doPut :: Handle -> String -> IO ()
 doPut h file = do
     sock <- listenOn $ PortNumber 0
     (PortNumber port) <- socketPort sock
-    print port
     hPutStrLn h $ show port
-    (c,_,_) <- accept sock
+    (client,_,_) <- accept sock
     withFile file WriteMode (\handle -> do
-        contents <- B.hGetContents c
+        contents <- B.hGetContents client
         B.hPut handle contents)
+    hClose client
     sClose sock
 
 doDir :: Handle -> IO ()

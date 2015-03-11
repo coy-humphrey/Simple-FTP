@@ -6,33 +6,36 @@ import os
 def trim_split (str):
     return str.strip().split()
 
+# Quick and dirty hack found at:
+# http://code.activestate.com/recipes/531822-pick-unused-port/
+import socket
+
+def PickUnusedPort():
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.bind(('localhost', 0))
+  addr, port = s.getsockname()
+  s.close()
+  return port
+
 class Answer(LineReceiver):
     def __init__(self):
         self.next_port = -1
 
     def lineReceived (self, line):
-        functions = {
-        "getQuote" : self._get_quote_,
-        "echo"     : self._echo_,
-        "get"      : self._get_,
-        "port"     : self._port_,
-        "dir"      : self._dir_,
-        "exit"     : self._exit_,
-        }
         cmd = trim_split (line)
         if len(cmd) < 1:
             return
+        functions = {
+            "get"      : self._get_,
+            "port"     : self._port_,
+            "dir"      : self._dir_,
+            "put"      : self._put_,
+            "exit"     : self._exit_,
+        }
         if functions.has_key (cmd[0]):
             functions[cmd[0]](cmd[1:])
         else:
             self.transport.write ("Invalid command\n")
-
-    def _get_quote_ (self, cmd):
-        self.transport.write ("Have a good day.\n")
-
-    def _echo_ (self, cmd):
-        line = " ".join(cmd)
-        self.transport.write (line)
 
     def _exit_ (self, cmd):
         self.transport.loseConnection()
@@ -53,9 +56,10 @@ class Answer(LineReceiver):
         self.transport.write (listing_str + "\n")
 
     def _put_ (self, cmd):
-        endpoint = endpoints.serverFromString(reactor, "tcp:" + "0")
-
-
+        port = PickUnusedPort()
+        endpoint = endpoints.serverFromString(reactor, "tcp:" + str(port))
+        endpoint = endpoint.listen (ReceivingFactory(cmd[0], endpoint))
+        self.transport.write (str(port) + '\n')
 
 
 class AnswerFactory(protocol.Factory):
@@ -99,21 +103,28 @@ class SendingFactory(protocol.Factory):
 # Receiving factory can just recv raw data =]
 # Work like sending factory, take a file name
 # open file and dump all raw data into file
-'''class ReceivingProtocol(protocol.Protocol):
+class ReceivingProtocol(protocol.Protocol):
     def dataReceived(self, data):
         self.factory.fp.write (data)
+
+    def connectionLost(self, a):
+        print "stopping protocol"
+        self.factory.stopFactory()
 
 class ReceivingFactory(protocol.Factory):
     protocol = ReceivingProtocol
 
-    def __init__(self, fname):
+    def __init__(self, fname, endpoint):
         self.file = fname
+        self.endpoint = endpoint
 
     def startFactory(self):
-        self.fp = open(self.file, 'bw')
+        self.fp = open(self.file, 'wb')
 
     def stopFactory(self):
+        print "stoppping factory"
         self.fp.close()
-'''
+        self.endpoint.addCallback(stopListening)
+
 endpoints.serverFromString(reactor, "tcp:" + sys.argv[1]).listen(AnswerFactory())
 reactor.run()
