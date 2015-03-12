@@ -102,7 +102,9 @@ def connectionMade(self):
     fs.beginFileTransfer(self.factory.fp, self.transport)
 ~~~
 
-Twisted provides a class called FileSender for sending files.
+Twisted provides a class called FileSender for sending files. Before discovering this class, we considered reading the file
+and dumping its data over the stream. However, that defeats the purpose of Twisted's event-driven approach. The program will block when data is not able to be uploaded, and prevent other events from being run. The FileSender class is designed using
+Twisted's event system, and will only send data when it is able to, allowing other event to run when data cannot be sent.
 
 Code Length
 ---
