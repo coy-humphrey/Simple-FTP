@@ -47,36 +47,7 @@ for (;;) {
 ~~~
 
 In Java, we had a main loop that would constantly accept clients and start a new thread to
-handle each new client. The ClientHandler class also had two inner classes, a GetHandler and
-a PutHandler, which implement Runnable so each command could be threaded as well. We had to 
-pass the client's IP, port number, and the file name given to each Handler, so objects that
-required these could be constructed.
-
-~~~ {.java}
-ClientHandler.java
-class GetHandler implements Runnable{
-    InetAddress addr;
-    int portNum;
-    String file;
-
-    public GetHandler(InetAddress addr, int portNum, String file){
-        this.addr = addr;
-        this.portNum = portNum;
-        this.file = file;
-    }
-    
-    public void run(){
-        ...
-    }
-}
-~~~
-
-The run method carried out the specified command, sending a file from the client or server to the
-other. It is called when the Thread is created, and when completed, the Thread terminates.
-
-The only notable difference between the GetHandler and the PutHandler are the directions of the
-reading or file streams. `get` has a FileInputStream to read from, whereas `put` has a
-FileOutputStream to write to.
+handle each new client. 
 
 ### Haskell
 ~~~ {.haskell}
@@ -183,4 +154,51 @@ def lineReceived (self, line):
         self.transport.write ("Invalid command\n")
 ~~~
 
+Threading Differences
+---
+### Java
 
+In the Java program, the ClientHandler class also had two inner classes, a GetHandler and
+a PutHandler, which implement Runnable so each command could be threaded as well. We had to 
+pass the client's IP, port number, and the file name given to each Handler, so objects that
+required these could be constructed, as Java has no clean way of sharing variables between
+classes.
+
+~~~ {.java}
+ClientHandler.java
+class GetHandler implements Runnable{
+    InetAddress addr;
+    int portNum;
+    String file;
+
+    public GetHandler(InetAddress addr, int portNum, String file){
+        this.addr = addr;
+        this.portNum = portNum;
+        this.file = file;
+    }
+    
+    public void run(){
+        ...
+    }
+}
+~~~
+
+The run method carried out the specified command, sending a file from the client or server to the
+other. It is called when the Thread is created, and when completed, the Thread terminates.
+
+The only notable difference between the GetHandler and the PutHandler are the directions of the
+reading or file streams. `get` has a FileInputStream to read from, whereas `put` has a
+FileOutputStream to write to.
+
+### Haskell
+
+Threading is Haskell is much cleaner. The variables can be passed directly through to the new
+function call as parameters, and no Thread objeect needs to be created.
+
+~~~ {.haskell}
+(h,host,_) <- accept sock
+forkIO $ handler handle host ""
+~~~
+
+The socket's handle and the host IP are passed to a function `handler`, which executes commands
+that the client inputs.
