@@ -44,7 +44,35 @@ for (;;) {
 ~~~
 
 In Java, we had a main loop that would constantly accept clients and start a new thread to
-handle each new client.
+handle each new client. The ClientHandler class also had two inner classes, a GetHandler and
+a PutHandler, which implement Runnable so each command could be threaded as well. We had to 
+pass the client's IP, port number, and the file name given to each Handler, so objects that
+required these could be constructed.
+
+~~~ {.java}
+class GetHandler implements Runnable{
+    InetAddress addr;
+    int portNum;
+    String file;
+
+    public GetHandler(InetAddress addr, int portNum, String file){
+        this.addr = addr;
+        this.portNum = portNum;
+        this.file = file;
+    }
+    
+    public void run(){
+        ...
+    }
+}
+~~~
+
+The run method carried out the specified command, sending a file from the client or server to the
+other. It is called when the Thread is created, and when completed, the Thread terminates.
+
+The only notable difference between the GetHandler and the PutHandler are the directions of the
+reading or file streams. `get` has a FileInputStream to read from, whereas `put` has a
+FileOutputStream to write to.
 
 ~~~ {.haskell}
 loop serv_sock = do 
@@ -57,6 +85,9 @@ The Haskell implementation follows the same structure as the one in Java. Notabl
 Haskell does not have an infinite for loop as in Java, it can still loop endlessly by using
 tail recursion. Additionally, Haskell can start a new thread using only a function, rather than creating a Thread object as in Java.
 
+~~~ {.python}
+please put da python code with the def and the if and the elif in here
+~~~
 
 Handling Files
 ---
