@@ -15,7 +15,8 @@ Project Outline
 ---
 
 Our goal was to create an FTP server in different languages to compare the networking capabilities of each language, as well as
-the ease of programming and understanding. We wanted our server to have basic FTP functionality, such as `get` and `put`.
+the ease of programming and understanding. Our project is inspired by the File Transfer Protocol, but it is not an exact copy.
+As in FTP, our protocol involves a telnet port and separate data ports for file transfer.
 
 Our protocol includes the following commands:
 
