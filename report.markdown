@@ -2,25 +2,6 @@
 % Examining Networking Capabilities of Haskell, Java, and the Event-driven Python Library Twisted
 % Coy Humphrey and Dustin Pfeiffer
 
-First paragraph.
-
-Second paragraph.
-
-Third paragraph.
-
-~~~~~~~~~~~~~~~~~ {.haskell}
--- Dummy Haskell code
-main = do
-    putStrLn "Hello"
-    return ()
-~~~~~~~~~~~~~~~~~
-
-~~~~~~~~~~~~~~~~~ {.java}
-// Dummy Java code
-for (int i = 3; i >= 0; --i){
-    System.out.println (i);
-}
-~~~~~~~~~~~~~~~~~
 
 Why choose these languages?
 ---
@@ -94,9 +75,54 @@ def connectionMade(self):
 
 Twisted provides a class called FileSender for sending files.
 
+Code Length
+---
 
-| Language | Lines  | Center   |
-|:---------|-------:|:--------:|
-| Java     |    210 | Hello    |
-| Python   |    130 | Dustin   |
-| Haskell  |     90 | Hi       |
+| Language | File               | Lines    | Total |
+|:---------|:-------------------|---------:|------:|
+| Java     | SimpleFTP.java     | 152      |       |
+|          | ClientHandler.java | 42       | 194   |
+| Haskell  | SimpleFTP.hs       | 82       | 82    |
+| Python   | SimpleFTP.py       | 102      | 102   |
+
+Java was the most verbose of the languages. It consists of four classes over two files.
+The SimpleFTP class contains the main method. ClientHandler contains two inner classes to
+handle the `get` and `put` commands. The files, however, are riddled with `try`/`catch`
+blocks, which make the code that does the work difficult to find.
+
+Haskell was the shortest program. However, what it gains in brevity, it loses in clarity.
+It is by far the most dense, and the code must be read closely to gain a good understanding
+of how it works under the hood.
+
+Twisted, with just over a hundred lines of code, can still be difficult to understand. Because
+it is event-based, it requires a closer reading than just following the code, as you can do
+in imperative languages, such as Java.
+
+Parsing Input
+---
+
+After a client connects to the server, they are able to send commands. The server parses these commands
+and performs an appropriate action. The code to do the parsing was remarkably similar between the three
+languages. Each implementation involves splitting the command string into words, then checking the first
+word for the command. An appropriate function is called with the remaining words passed in as arguments.
+The cleanest of these implementations was done in python and is shown below.
+
+~~~ {.python}
+def lineReceived (self, line):
+    cmd = trim_split (line)
+    if len(cmd) < 1:
+        return
+    functions = {
+        "get"      : self._get_,
+        "port"     : self._port_,
+        "dir"      : self._dir_,
+        "put"      : self._put_,
+        "exit"     : self._exit_,
+    }
+    if functions.has_key (cmd[0]):
+        functions[cmd[0]](cmd[1:])
+    else:
+        self.transport.write ("Invalid command\n")
+~~~
+
+

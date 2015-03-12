@@ -1,13 +1,12 @@
 import java.net.*;
 import java.io.*;
 
-public class ClientHandler implements Runnable
-{
+public class ClientHandler implements Runnable{
+
 	//*********************************************************//
     //********************GET HANDLER**************************//
     //*********************************************************//
-    class GetHandler implements Runnable
-    {
+    class GetHandler implements Runnable{
         InetAddress addr;
         int portNum;
         String file;
@@ -27,15 +26,12 @@ public class ClientHandler implements Runnable
                     new PrintWriter(sock.getOutputStream(), true);
                 FileInputStream in =
                     new FileInputStream(file);
-                ) 
-            {
-            	while ((d = in.read()) != -1)
-                {
-            		out.write(d);
+                ){
+                while ((d = in.read()) != -1){
+                    out.write(d);
             	}
         	}
-            catch (Exception e)
-            {
+            catch (Exception e){
                 System.err.println ("Failed to connect to client");
             }
             port = 0;
@@ -45,8 +41,7 @@ public class ClientHandler implements Runnable
     //*********************************************************//
     //********************PUT HANDLER**************************//
     //*********************************************************//
-    class PutHandler implements Runnable
-    {
+    class PutHandler implements Runnable{
         PrintWriter out;
         String file;
         
@@ -60,8 +55,7 @@ public class ClientHandler implements Runnable
         	int d;
         	try (
                 ServerSocket sock = new ServerSocket(0);
-                ) 
-            {
+                ){
             	out.println("" + sock.getLocalPort());
             	try (
             			Socket client = sock.accept();
@@ -73,8 +67,7 @@ public class ClientHandler implements Runnable
             		}
             	}	 
         	}
-            catch (Exception e)
-            {
+            catch (Exception e){
                 System.err.println ("Failed to connect to client");
             }
             port = 0;
@@ -83,37 +76,31 @@ public class ClientHandler implements Runnable
     
     Socket client;
     int port;
-	public ClientHandler (Socket c)
-	{
+	public ClientHandler (Socket c){
         client = c;
 	}
 
-	public void run()
-	{
+	public void run(){
 		try (
     		PrintWriter out =
     		    new PrintWriter(client.getOutputStream(), true);
     		BufferedReader in = new BufferedReader(
     			new InputStreamReader(client.getInputStream()));
-    		)
-    	{
+    		){
     		String line;
             while ((line = in.readLine()) != null)
             {
             	handleLine (out, line);
             }
         }
-        catch (IOException e)
-        {
+        catch (IOException e){
         	System.err.println ("Failed to thread");
         }
 	}
 
-    public void handleLine (PrintWriter out, String line)
-    {
+    public void handleLine (PrintWriter out, String line){
         String[] words = line.split (" ");
-        switch (words[0])
-        {
+        switch (words[0]){
             case "exit": try { client.close(); }
             			 catch (Exception e) {
             				System.out.println("No");
