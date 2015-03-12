@@ -36,7 +36,7 @@ information as a string over the telnet socket.
 
 Handling Clients
 ---
-## Java
+### Java
 
 ~~~ {.java}
 SimpleFTP.java
@@ -78,7 +78,7 @@ The only notable difference between the GetHandler and the PutHandler are the di
 reading or file streams. `get` has a FileInputStream to read from, whereas `put` has a
 FileOutputStream to write to.
 
-## Haskell
+### Haskell
 ~~~ {.haskell}
 loop serv_sock = do 
     (h,host,_) <- accept serv_sock
@@ -90,7 +90,7 @@ The Haskell implementation follows the same structure as the one in Java. Notabl
 Haskell does not have an infinite for loop as in Java, it can still loop endlessly by using
 tail recursion. Additionally, Haskell can start a new thread using only a function, rather than creating a Thread object as in Java.
 
-## Python
+### Python
 ~~~ {.python}
 please put da python code with the def and the if and the elif in here
 ~~~
@@ -98,7 +98,7 @@ please put da python code with the def and the if and the elif in here
 Handling Files
 ---
 
-## Java
+### Java
 
 ~~~ {.java}
 ClientHandler.java
@@ -111,7 +111,7 @@ Our Java implementation is naive method of reading and writing files. It reads a
 a single byte at a time without buffering, until it reaches the end of the file. This affects
 speed of the transfer, but is still suitable for our goals in this project.
 
-## Haskell
+### Haskell
 
 ~~~ {.haskell}
 withFile file ReadMode (\handle -> do
@@ -123,7 +123,7 @@ Our Haskell implementation takes advantage of Haskell's laziness. Conceptually, 
 contents of the entire file, then write everything to the socket. Haskell will handle any
 buffering that needs to be done.
 
-## Python
+### Python
 
 ~~~ {.python}
 def connectionMade(self):
