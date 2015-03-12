@@ -94,9 +94,27 @@ def connectionMade(self):
 
 Twisted provides a class called FileSender for sending files.
 
+Code Length
+---
 
-Language   Lines  Third cat
---------   -----  ---------
-Java       210     Hello
-Python     130     Dustin
-Haskell    90      Hi
+Language      File               Lines       Total
+--------      ----               -----       -----
+Java          SimpleFTP.java     152
+              ClientHandler.java 42          194
+Haskell       SimpleFTP.hs       82          82
+Twisted       SimpleFTP.py       102         102
+
+Java was the most verbose of the languages. It consists of four classes over two files.
+The SimpleFTP class contains the main method. ClientHandler contains two inner classes to
+handle the `get` and `put` commands. The files, however, are riddled with `try`/`catch`
+blocks, which make the code that does the work difficult to find.
+
+Haskell was the shortest program. However, what it gains in brevity, it loses in clarity.
+It is by far the most dense, and the code must be read closely to gain a good understanding
+of how it works under the hood.
+
+Twisted, with just over a hundred lines of code, can still be difficult to understand. Because
+it is event-based, it requires a closer reading than just following the code, as you can do
+in imperative languages, such as Java.
+
+
