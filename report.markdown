@@ -21,8 +21,10 @@ to simplify the implementation, using just ports rather than an IP address. We d
 
 Handling Clients
 ---
+## Java
 
 ~~~ {.java}
+SimpleFTP.java
 for (;;) {
     Socket clientSocket = serverSocket.accept();
     (new Thread(new ClientHandler(clientSocket))).start();
@@ -36,6 +38,7 @@ pass the client's IP, port number, and the file name given to each Handler, so o
 required these could be constructed.
 
 ~~~ {.java}
+ClientHandler.java
 class GetHandler implements Runnable{
     InetAddress addr;
     int portNum;
@@ -60,6 +63,7 @@ The only notable difference between the GetHandler and the PutHandler are the di
 reading or file streams. `get` has a FileInputStream to read from, whereas `put` has a
 FileOutputStream to write to.
 
+## Haskell
 ~~~ {.haskell}
 loop serv_sock = do 
     (h,host,_) <- accept serv_sock
@@ -71,6 +75,7 @@ The Haskell implementation follows the same structure as the one in Java. Notabl
 Haskell does not have an infinite for loop as in Java, it can still loop endlessly by using
 tail recursion. Additionally, Haskell can start a new thread using only a function, rather than creating a Thread object as in Java.
 
+## Python
 ~~~ {.python}
 please put da python code with the def and the if and the elif in here
 ~~~
@@ -78,7 +83,10 @@ please put da python code with the def and the if and the elif in here
 Handling Files
 ---
 
+## Java
+
 ~~~ {.java}
+ClientHandler.java
 while ((int d = in.read()) != -1){
     fileout.write(d);
 }
@@ -87,6 +95,8 @@ while ((int d = in.read()) != -1){
 Our Java implementation is naive method of reading and writing files. It reads and writes
 a single byte at a time without buffering, until it reaches the end of the file. This affects
 speed of the transfer, but is still suitable for our goals in this project.
+
+## Haskell
 
 ~~~ {.haskell}
 withFile file ReadMode (\handle -> do
@@ -97,6 +107,8 @@ withFile file ReadMode (\handle -> do
 Our Haskell implementation takes advantage of Haskell's laziness. Conceptually, we read in the
 contents of the entire file, then write everything to the socket. Haskell will handle any
 buffering that needs to be done.
+
+## Python
 
 ~~~ {.python}
 def connectionMade(self):
