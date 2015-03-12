@@ -92,4 +92,11 @@ def connectionMade(self):
     fs.beginFileTransfer(self.factory.fp, self.transport)
 ~~~
 
-Twisted provides a class called FileSender for sending files. 
+Twisted provides a class called FileSender for sending files.
+
+
+Language   Lines  Third cat
+--------   -----  ---------
+Java       210     Hello
+Python     130     Dustin
+Haskell    90      Hi
