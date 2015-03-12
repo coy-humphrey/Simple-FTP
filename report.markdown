@@ -3,14 +3,6 @@
 % Coy Humphrey and Dustin Pfeiffer
 
 
-Why choose these languages?
----
-
-We chose Java because we already had an understanding of Java and it made for a good, prototypical imperative language.
-Similarly, we chose Haskell because we were learning it in class, and we feel it represents functional programming languages.
-After seeing how similar our Java and Haskell implementations were, we chose Twisted to explore event-driven
-programming.
-
 Project Outline
 ---
 
@@ -33,6 +25,14 @@ closed.
 information as a string over the telnet socket.
 *  `exit` - Used to end the connection. The server responds by closing the telnet socket.
 
+We chose to implement our project in Java, Haskell, and Python using a library called Twisted.
+
+Why choose these languages?
+---
+
+We chose Java because we already had an understanding of Java and we feel it represents a prototypical imperative language.
+Similarly, we chose Haskell because we were learning it in class, and we feel it provides a good representation of functional
+programming languages. We chose Twisted to explore event-driven develop of a network application.
 
 Handling Clients
 ---
