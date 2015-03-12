@@ -15,8 +15,22 @@ Project Outline
 ---
 
 Our goal was to create an FTP server in different languages to compare the networking capabilities of each language, as well as
-the ease of programming and understanding. We wanted our server to have basic FTP functionality, such as `get` and `put`. We decided
-to simplify the implementation, using just ports rather than an IP address. We decided to use Java, Haskell, and Twisted, a Python library.
+the ease of programming and understanding. We wanted our server to have basic FTP functionality, such as `get` and `put`.
+
+Our protocol includes the following commands:
+
+*  `get` *filename* - Used to get files from the server. The port command must be called before calling
+`get`. The server will attempt to connect to the client on the port specified by the earlier `port`
+command. If the connection is successful, the server will send the entire file through the new 
+connection and close the connection when the file is finished.
+*  `put` *filename* - Used to send files to the server. The server will respond with a string containing 
+the port number to connect to over the telnet socket.The client should open a connection to the server
+on this port and send the contents of the file. When the file has been sent the connection should be 
+closed.
+*  `port` *portNum* - Used to specify the port the server should connect to during the next `get` command.
+*  `dir` - Used to see the contents of the directory the server is running in. The server sends this
+information as a string over the telnet socket.
+*  `exit` - Used to end the connection. The server responds by closing the telnet socket.
 
 
 Handling Clients
