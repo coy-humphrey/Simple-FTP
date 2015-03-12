@@ -1,6 +1,6 @@
 % Simplified File Transfer Protocol
 % Examining Networking Capabilities of Haskell, Java, and the Event-driven Python Library Twisted
-%Coy Humphrey and Dustin Pfeiffer
+% Coy Humphrey and Dustin Pfeiffer
 
 First paragraph.
 
@@ -95,8 +95,8 @@ def connectionMade(self):
 Twisted provides a class called FileSender for sending files.
 
 
-Language   Lines  Third cat
---------   -----  ---------
-Java       210     Hello
-Python     130     Dustin
-Haskell    90      Hi
+| Language | Lines  | Center   |
+|:---------|-------:|:--------:|
+| Java     |    210 | Hello    |
+| Python   |    130 | Dustin   |
+| Haskell  |     90 | Hi       |
