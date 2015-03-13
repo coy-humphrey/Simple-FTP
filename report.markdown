@@ -67,8 +67,8 @@ endpoints.serverFromString(reactor, "tcp:" + sys.argv[1]).listen(AnswerFactory()
 reactor.run()
 ~~~
 
-Twisted provides the functionality we had to hand-code in Java and Haskell under the hood. The above code will the python
-program listen on the tcp port specified by the first command line argument. When a client connects, they are directed to a
+Twisted provides the functionality we had to hand-code in Java and Haskell under the hood. The above code will listen
+on the tcp port specified by the first command line argument. When a client connects, they are directed to a
 factory. Factories are a Twisted abstraction. They contain some state as well as a Protocol, another Twisted abstraction.
 The AnswerFactory, seen above, defines the AnswerProtocol, which is used to accept lines from the client, parse them, and
 perform appropriate actions depending on the line received.
@@ -86,7 +86,7 @@ while ((int d = in.read()) != -1){
 ~~~
 
 Our Java implementation is naive method of reading and writing files. It reads and writes
-a single byte at a time without buffering, until it reaches the end of the file. This affects
+a single byte at a time without buffering until it reaches the end of the file. This affects
 speed of the transfer, but is still suitable for our goals in this project.
 
 ### Haskell
@@ -99,7 +99,7 @@ withFile file ReadMode (\handle -> do
 
 Our Haskell implementation takes advantage of Haskell's laziness. Conceptually, we read in the
 contents of the entire file, then write everything to the socket. Haskell will handle any
-buffering that needs to be done.
+buffering that needs to be done using the Lazy Byte String.
 
 ### Python
 
@@ -110,8 +110,9 @@ def connectionMade(self):
 ~~~
 
 Twisted provides a class called FileSender for sending files. Before discovering this class, we considered reading the file
-and dumping its data over the stream. However, that defeats the purpose of Twisted's event-driven approach. The program will block when data is not able to be uploaded, and prevent other events from being run. The FileSender class is designed using
-Twisted's event system, and will only send data when it is able to, allowing other event to run when data cannot be sent.
+and dumping its data over the stream. However, that defeats the purpose of Twisted's event-driven approach. The program will
+block when data is not able to be uploaded, and prevent other events from being run. The FileSender class is designed using
+Twisted's event system, and will only send data when it is able to, allowing other events to run when data cannot be sent.
 
 Parsing Input
 ---
@@ -120,7 +121,7 @@ After a client connects to the server, they are able to send commands. The serve
 and performs an appropriate action. The code to do the parsing was remarkably similar between the three
 languages. Each implementation involves splitting the command string into words, then checking the first
 word for the command. An appropriate function is called with the remaining words passed in as arguments.
-The cleanest of these implementations was done in python and is shown below.
+The cleanest of these implementations was done in Python and is shown below.
 
 ~~~ {.python}
 def lineReceived (self, line):
@@ -169,8 +170,9 @@ class GetHandler implements Runnable{
 (new Thread(new GetHandler(client.getInetAddress(), port, words[1]))).start();
 ~~~
 
-In the Java program, any method that we wanted to run in a thread had to be wrapped in an object that implements the Runnable interface. Additionally, arguments could not be directly passed to the method. Instead we had to add fields to the method's
-wrapper class and create a constructor that accepted these fields.
+In the Java program, any method that we wanted to run in a thread had to be wrapped in an object that implements the 
+Runnable interface. Additionally, arguments could not be directly passed to the method. Instead we had to add fields 
+to the method's wrapper class and create a constructor that accepted these fields.
 
 The code above shows how we run our Get method in its own thread. We created a GetHandler class as a wrapper, and passed
 a GetHandler object into the Thread constructor.
@@ -181,7 +183,8 @@ a GetHandler object into the Thread constructor.
 forkIO $ doGet host port (cmd !! 1)
 ~~~
 
-Threading is Haskell is much cleaner. Haskell provides a function called forkIO which, given a function call, runs the function in its own lightweight thread.
+Threading is Haskell is much cleaner. Haskell provides a function called forkIO which, given a function call, 
+runs the function in its own lightweight thread.
 
 The above code shows how we run our Get command in its own thread.
 
@@ -206,4 +209,20 @@ of how it works under the hood.
 
 Twisted, with just over a hundred lines of code, can still be difficult to understand because neither of us is
 very familiar with event-driven programming.
+
+Conclusion
+---
+
+Our goal with this project was to see if there was an optimal language for creating simple
+networking programs. What we found, however, was that it really comes down to personal preference.
+Even within our own group, there are disagreements on which code is the most readable or the easiest
+to write. Connecting to another computer is not difficult, provided the programming language is known
+beforehand. The one conclusion we came to was that Python was the most difficult to code because
+we had little experience in Python, and none in event-driven programming.
+
+Even the amount of code necessary is comparable. The Haskell and Python implementation came out roughly
+equal in line count, and the Java, though the count is about twice as much as the others, has a lot of lines 
+taken up `try`/`catch` headers and brackets. With these blocks, however, it gains the extra functionality
+of basic error checking. If stripped down to just the necessary function calls, the three programs would
+be about the same length.
 

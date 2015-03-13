@@ -1,0 +1,28 @@
+Line 70:
+The above code will (the python program) listen on the tcp port
+--Removed
+
+Line 102:
+buffering that needs to be done (using the Lazy Byte String).
+--Added for clarity
+
+Line 113:
+Added new line for readability in Notepad++/Sublime
+
+Line 115:
+allowing other event(s) to run when data cannot be sent.
+--Added for grammatical correctness
+
+Line 124:
+was done in (P)ython and is shown below.
+--Capitalized
+
+Line 173:
+Added new line for readability in Notepad++/Sublime
+
+Line 186:
+Added new line for readability in Notepad++/Sublime
+
+Line 213:
+Added a possible conclusion. Not sold on it, so change as you see fit, but I thought
+it would be a good start.
