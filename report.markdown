@@ -32,7 +32,7 @@ Why choose these languages?
 
 We chose Java because we already had an understanding of Java and we feel it represents a prototypical imperative language.
 Similarly, we chose Haskell because we were learning it in class, and we feel it provides a good representation of functional
-programming languages. We chose Twisted to explore event-driven develop of a network application.
+programming languages. We chose Twisted to explore the use of event-driven languages in network applications.
 
 Handling Clients
 ---
@@ -113,29 +113,6 @@ Twisted provides a class called FileSender for sending files. Before discovering
 and dumping its data over the stream. However, that defeats the purpose of Twisted's event-driven approach. The program will block when data is not able to be uploaded, and prevent other events from being run. The FileSender class is designed using
 Twisted's event system, and will only send data when it is able to, allowing other event to run when data cannot be sent.
 
-Code Length
----
-
-| Language | File               | Lines    | Total |
-|:---------|:-------------------|---------:|------:|
-| Java     | SimpleFTP.java     | 152      |       |
-|          | ClientHandler.java | 42       | 194   |
-| Haskell  | SimpleFTP.hs       | 82       | 82    |
-| Python   | SimpleFTP.py       | 102      | 102   |
-
-Java was the most verbose of the languages. It consists of four classes over two files.
-The SimpleFTP class contains the main method. ClientHandler contains two inner classes to
-handle the `get` and `put` commands. The files, however, are riddled with `try`/`catch`
-blocks, which make the code that does the work difficult to find.
-
-Haskell was the shortest program. However, what it gains in brevity, it loses in clarity.
-It is by far the most dense, and the code must be read closely to gain a good understanding
-of how it works under the hood.
-
-Twisted, with just over a hundred lines of code, can still be difficult to understand. Because
-it is event-based, it requires a closer reading than just following the code, as you can do
-in imperative languages, such as Java.
-
 Parsing Input
 ---
 
@@ -162,6 +139,8 @@ def lineReceived (self, line):
     else:
         self.transport.write ("Invalid command\n")
 ~~~
+
+The Java and Haskell implementations use case of and switch statements respectively.
 
 Threading Differences
 ---
@@ -205,3 +184,26 @@ forkIO $ doGet host port (cmd !! 1)
 Threading is Haskell is much cleaner. Haskell provides a function called forkIO which, given a function call, runs the function in its own lightweight thread.
 
 The above code shows how we run our Get command in its own thread.
+
+Code Length
+---
+
+| Language | File               | Lines    | Total |
+|:---------|:-------------------|---------:|------:|
+| Java     | SimpleFTP.java     | 152      |       |
+|          | ClientHandler.java | 42       | 194   |
+| Haskell  | SimpleFTP.hs       | 82       | 82    |
+| Python   | SimpleFTP.py       | 102      | 102   |
+
+Java was the most verbose of the languages. It consists of four classes over two files.
+The SimpleFTP class contains the main method. ClientHandler contains two inner classes to
+handle the `get` and `put` commands. The files, however, are riddled with `try`/`catch`
+blocks, which make the code that does the work difficult to find.
+
+Haskell was the shortest program. However, what it gains in brevity, it loses in clarity.
+It is by far the most dense, and the code must be read closely to gain a good understanding
+of how it works under the hood.
+
+Twisted, with just over a hundred lines of code, can still be difficult to understand because neither of us is
+very familiar with event-driven programming.
+
