@@ -126,14 +126,6 @@ public class ClientHandler implements Runnable{
             case "dir":
             	listDir(out);
             	break;
-            case "cd":
-            	if (words.length != 2){
-            		out.println("cd invalid command");
-            		break;
-            	}
-//            	changeDirectory(words[1]);
-            	out.println("Doesn't actually do anything now...");
-            	break;
         }
     }    
     

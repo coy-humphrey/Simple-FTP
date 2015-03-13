@@ -188,6 +188,22 @@ runs the function in its own lightweight thread.
 
 The above code shows how we run our Get command in its own thread.
 
+Known Bugs
+---
+
+Our `put` protocol involves opening a separate socket, sending the port number of that socket to the client, then closing the socket after receiving all of the data from the client. Doing this in Java and Haskell was easy because we had direct access
+to lower level Socket details. In Twisted, however, these details were abstracted away and we could not figure out how to
+access them.
+
+In Java and Haskell, getting the port to send to the client required only a single function call. We could not find a comparable
+function call in Twisted, and so we had to a hack instead. In our Python implementation we use Python's normal socket library
+to open a socket. We then keep track of the port of that socket, close the socket, and tell Twisted to start a factory on that
+port. This introduces a race condition, where it's possible that the port reported by our hack may be taken by another process
+in the time between closing the dummy socket and starting the factory listening on the port.
+
+We were also unable to find out how to close a factory's underlying server socket from within the factory. Because of this,
+every time `put` is used, a new server socket is opened, but is never closed.
+
 Code Length
 ---
 

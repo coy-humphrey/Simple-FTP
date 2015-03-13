@@ -17,6 +17,8 @@ def PickUnusedPort():
   s.close()
   return port
 
+# Protocol that receives a line at a time from the client,
+# parses each line and performs an appropriate action.
 class Answer(LineReceiver):
     def __init__(self):
         self.next_port = -1
@@ -65,6 +67,7 @@ class Answer(LineReceiver):
 class AnswerFactory(protocol.Factory):
     protocol = Answer
 
+# Sending protocol just sends a file as soon as a connection is made
 class SendingProtocol(protocol.Protocol):
     def connectionMade(self):
         def f1(lastChunk):
@@ -100,7 +103,7 @@ class SendingFactory(protocol.Factory):
         print "Failed to connect"
 
 
-# Receiving factory can just recv raw data =]
+# Receiving factory can just recv raw data
 # Work like sending factory, take a file name
 # open file and dump all raw data into file
 class ReceivingProtocol(protocol.Protocol):
