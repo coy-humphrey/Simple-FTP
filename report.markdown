@@ -63,8 +63,15 @@ tail recursion. Additionally, Haskell can start a new thread using only a functi
 
 ### Python
 ~~~ {.python}
-please put da python code with the def and the if and the elif in here
+endpoints.serverFromString(reactor, "tcp:" + sys.argv[1]).listen(AnswerFactory())
+reactor.run()
 ~~~
+
+Twisted provides the functionality we had to hand-code in Java and Haskell under the hood. The above code will the python
+program listen on the tcp port specified by the first command line argument. When a client connects, they are directed to a
+factory. Factories are a Twisted abstraction. They contain some state as well as a Protocol, another Twisted abstraction.
+The AnswerFactory, seen above, defines the AnswerProtocol, which is used to accept lines from the client, parse them, and
+perform appropriate actions depending on the line received.
 
 Handling Files
 ---
@@ -158,13 +165,9 @@ def lineReceived (self, line):
 
 Threading Differences
 ---
+
 ### Java
 
-In the Java program, the ClientHandler class also had two inner classes, a GetHandler and
-a PutHandler, which implement Runnable so each command could be threaded as well. We had to 
-pass the client's IP, port number, and the file name given to each Handler, so objects that
-required these could be constructed, as Java has no clean way of sharing variables between
-classes.
 
 ~~~ {.java}
 ClientHandler.java
@@ -183,24 +186,22 @@ class GetHandler implements Runnable{
         ...
     }
 }
+...
+(new Thread(new GetHandler(client.getInetAddress(), port, words[1]))).start();
 ~~~
 
-The run method carried out the specified command, sending a file from the client or server to the
-other. It is called when the Thread is created, and when completed, the Thread terminates.
+In the Java program, any method that we wanted to run in a thread had to be wrapped in an object that implements the Runnable interface. Additionally, arguments could not be directly passed to the method. Instead we had to add fields to the method's
+wrapper class and create a constructor that accepted these fields.
 
-The only notable difference between the GetHandler and the PutHandler are the directions of the
-reading or file streams. `get` has a FileInputStream to read from, whereas `put` has a
-FileOutputStream to write to.
+The code above shows how we run our Get method in its own thread. We created a GetHandler class as a wrapper, and passed
+a GetHandler object into the Thread constructor.
 
 ### Haskell
 
-Threading is Haskell is much cleaner. The variables can be passed directly through to the new
-function call as parameters, and no Thread objeect needs to be created.
-
 ~~~ {.haskell}
-(h,host,_) <- accept sock
-forkIO $ handler handle host ""
+forkIO $ doGet host port (cmd !! 1)
 ~~~
 
-The socket's handle and the host IP are passed to a function `handler`, which executes commands
-that the client inputs.
+Threading is Haskell is much cleaner. Haskell provides a function called forkIO which, given a function call, runs the function in its own lightweight thread.
+
+The above code shows how we run our Get command in its own thread.
