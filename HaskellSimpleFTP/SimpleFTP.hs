@@ -26,7 +26,7 @@ loop sock = do
 handler :: Handle -> HostName -> String -> IO ()
 handler h host port = do
     line <- hGetLine h :: IO String
-    let cmd = if (length.words) line > 0
+    let cmd = if not (null (words line))
         then words line
         else [""]
     case (head cmd) of 

@@ -241,4 +241,3 @@ equal in line count, and the Java, though the count is about twice as much as th
 taken up `try`/`catch` headers and brackets. With these blocks, however, it gains the extra functionality
 of basic error checking. If stripped down to just the necessary function calls, the three programs would
 be about the same length.
-
