@@ -1,3 +1,19 @@
+To build:
+
+javac SimpleFTP.java
+
+ghc SimpleFTP.hs
+
+The python version runs on python 2 and requires the library Twisted.
+
+To run:
+java SimpleFTP port
+
+python SimpleFTP port
+
+SimpleFTP port
+
+
 To test, run the server giving the port as the first command line argument. Connect to the server
 and enter commands using telnet. For get and put, use netcat. Use the -l option of netcat to
 listen on a port and test get. Pipe a file into netcat to test put.
@@ -13,7 +29,7 @@ telnet localhost 8000
 
 ----------------------
 Example 2:
-SimpleFTP 8000
+java SimpleFTP 8000
 
 telnet localhost 8000
 > put testfile
