@@ -70,6 +70,8 @@ class AnswerFactory(protocol.Factory):
 # Sending protocol just sends a file as soon as a connection is made
 class SendingProtocol(protocol.Protocol):
     def connectionMade(self):
+        # Add these callbacks, otherwise FileSender throws some exceptions
+        # when it completes
         def f1(lastChunk):
             print "finished"
             self.transport.loseConnection()
@@ -95,6 +97,7 @@ class SendingFactory(protocol.Factory):
         print "closing factory"
         self.fp.close()
 
+    # Add these, otherwise exceptions are thrown
     def startedConnecting(self, c):
         print "Connecting"
     def clientConnectionLost (self,a,b):
@@ -112,6 +115,7 @@ class ReceivingProtocol(protocol.Protocol):
 
     def connectionLost(self, a):
         print "stopping protocol"
+        self.factory.fp.close()
         self.factory.stopFactory()
 
 class ReceivingFactory(protocol.Factory):
@@ -119,15 +123,12 @@ class ReceivingFactory(protocol.Factory):
 
     def __init__(self, fname, endpoint):
         self.file = fname
-        self.endpoint = endpoint
 
     def startFactory(self):
         self.fp = open(self.file, 'wb')
 
     def stopFactory(self):
         print "stoppping factory"
-        self.fp.close()
-        self.endpoint.addCallback(stopListening)
 
 endpoints.serverFromString(reactor, "tcp:" + sys.argv[1]).listen(AnswerFactory())
 reactor.run()

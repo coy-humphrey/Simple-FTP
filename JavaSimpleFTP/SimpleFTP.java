@@ -36,10 +36,7 @@ public class SimpleFTP
         {
         	clientSocket = ss.accept();
         }
-        catch (IOException e)
-        {
-        	System.err.println ("Failed to connect to client");
-        }
+        catch (IOException e){}
         (new Thread(new ClientHandler(clientSocket))).start();
     }
 }

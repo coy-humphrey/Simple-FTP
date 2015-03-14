@@ -18,6 +18,9 @@ To test, run the server giving the port as the first command line argument. Conn
 and enter commands using telnet. For get and put, use netcat. Use the -l option of netcat to
 listen on a port and test get. Pipe a file into netcat to test put.
 
+Note: In the examples, lines beginning with > show user input. Telnet does not actually begin
+lines with >
+
 Example 1:
 SimpleFTP 8000
 

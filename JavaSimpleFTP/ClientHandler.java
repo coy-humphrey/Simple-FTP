@@ -22,8 +22,8 @@ public class ClientHandler implements Runnable{
         	int d;
         	try (
                 Socket sock = new Socket(addr, portNum);
-                PrintWriter out =
-                    new PrintWriter(sock.getOutputStream(), true);
+                OutputStream out =
+                    sock.getOutputStream();
                 FileInputStream in =
                     new FileInputStream(file);
                 ){
@@ -31,9 +31,7 @@ public class ClientHandler implements Runnable{
                     out.write(d);
             	}
         	}
-            catch (Exception e){
-                System.err.println ("Failed to connect to client");
-            }
+            catch (Exception e){}
             port = 0;
         }
     }
@@ -67,9 +65,7 @@ public class ClientHandler implements Runnable{
             		}
             	}	 
         	}
-            catch (Exception e){
-                System.err.println ("Failed to connect to client");
-            }
+            catch (Exception e){}
             port = 0;
         }
     }
@@ -93,9 +89,7 @@ public class ClientHandler implements Runnable{
             	handleLine (out, line);
             }
         }
-        catch (IOException e){
-        	System.err.println ("Failed to thread");
-        }
+        catch (IOException e){}
 	}
 
     public void handleLine (PrintWriter out, String line){
@@ -141,8 +135,6 @@ public class ClientHandler implements Runnable{
 		for (File f : dirs){
 			out.println(f.getName());
 		}
-    	} catch (Exception e){
-    		System.err.println("Failed to list");
-    	}
+    	} catch (Exception e){}
     }
 }
