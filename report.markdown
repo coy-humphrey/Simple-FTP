@@ -25,7 +25,7 @@ closed.
 information as a string over the telnet socket.
 *  `exit` - Used to end the connection. The server responds by closing the telnet socket.
 
-We chose to implement our project in Java, Haskell, and Python using a library called Twisted.
+We chose to implement our project in Java, Haskell, and Python (using a library called Twisted).
 
 Why choose these languages?
 ---
@@ -33,6 +33,8 @@ Why choose these languages?
 We chose Java because we already had an understanding of Java and we feel it represents a prototypical imperative language.
 Similarly, we chose Haskell because we were learning it in class, and we feel it provides a good representation of functional
 programming languages. We chose Twisted to explore the use of event-driven languages in network applications.
+
+\pagebreak
 
 Handling Clients
 ---
@@ -183,7 +185,7 @@ a GetHandler object into the Thread constructor.
 forkIO $ doGet host port (cmd !! 1)
 ~~~
 
-Threading is Haskell is much cleaner. Haskell provides a function called forkIO which, given a function call, 
+Threading in Haskell is much cleaner. Haskell provides a function called forkIO which, given a function call, 
 runs the function in its own lightweight thread.
 
 The above code shows how we run our Get command in its own thread.
@@ -196,13 +198,14 @@ to lower level Socket details. In Twisted, however, these details were abstracte
 access them.
 
 In Java and Haskell, getting the port to send to the client required only a single function call. We could not find a comparable
-function call in Twisted, and so we had to a hack instead. In our Python implementation we use Python's normal socket library
+function call in Twisted, and so we had to use a hack instead. In our Python implementation we use Python's normal socket library
 to open a socket. We then keep track of the port of that socket, close the socket, and tell Twisted to start a factory on that
 port. This introduces a race condition, where it's possible that the port reported by our hack may be taken by another process
 in the time between closing the dummy socket and starting the factory listening on the port.
 
 We were also unable to find out how to close a factory's underlying server socket from within the factory. Because of this,
 every time `put` is used, a new server socket is opened, but is never closed.
+
 
 Code Length
 ---
@@ -223,7 +226,7 @@ Haskell was the shortest program. However, what it gains in brevity, it loses in
 It is by far the most dense, and the code must be read closely to gain a good understanding
 of how it works under the hood.
 
-Twisted, with just over a hundred lines of code, can still be difficult to understand because neither of us is
+Twisted, with just over a hundred lines of code, can still be difficult to understand because neither of us are
 very familiar with event-driven programming.
 
 Conclusion
