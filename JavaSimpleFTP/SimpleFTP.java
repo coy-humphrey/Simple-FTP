@@ -1,8 +1,6 @@
 import java.net.*;
 import java.io.*;
 
-// See: http://docs.oracle.com/javase/tutorial/networking/sockets/readingWriting.html
-
 public class SimpleFTP
 {
     public static void main (String args[]) throws IOException 
